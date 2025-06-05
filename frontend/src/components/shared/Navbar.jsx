@@ -1,7 +1,7 @@
 import React from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
-import { Avatar, AvatarImage } from '../ui/avatar'
+import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar'
 import { LogOut, User2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -28,6 +28,10 @@ const Navbar = () => {
             toast.error(error.response.data.message);
         }
     }
+
+    // Default profile photo URL (you can replace this with your preferred default image URL)
+    const defaultProfilePhoto = 'https://via.placeholder.com/150/cccccc/969696?text=User';
+
     return (
         <div className='bg-white'>
             <div className='flex items-center justify-between mx-auto max-w-7xl h-16'>
@@ -50,8 +54,6 @@ const Navbar = () => {
                                 </>
                             )
                         }
-
-
                     </ul>
                     {
                         !user ? (
@@ -63,14 +65,26 @@ const Navbar = () => {
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Avatar className="cursor-pointer">
-                                        <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
+                                        <AvatarImage 
+                                            src={user?.profile?.profilePhoto || defaultProfilePhoto} 
+                                            alt={user?.fullname || "User avatar"} 
+                                        />
+                                        <AvatarFallback>
+                                            {user?.fullname?.charAt(0)?.toUpperCase() || 'U'}
+                                        </AvatarFallback>
                                     </Avatar>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-80">
                                     <div className=''>
                                         <div className='flex gap-2 space-y-2'>
                                             <Avatar className="cursor-pointer">
-                                                <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
+                                                <AvatarImage 
+                                                    src={user?.profile?.profilePhoto || defaultProfilePhoto} 
+                                                    alt={user?.fullname || "User avatar"} 
+                                                />
+                                                <AvatarFallback>
+                                                    {user?.fullname?.charAt(0)?.toUpperCase() || 'U'}
+                                                </AvatarFallback>
                                             </Avatar>
                                             <div>
                                                 <h4 className='font-medium'>{user?.fullname}</h4>
@@ -86,7 +100,6 @@ const Navbar = () => {
                                                     </div>
                                                 )
                                             }
-
                                             <div className='flex w-fit items-center gap-2 cursor-pointer'>
                                                 <LogOut />
                                                 <Button onClick={logoutHandler} variant="link">Logout</Button>
@@ -97,10 +110,8 @@ const Navbar = () => {
                             </Popover>
                         )
                     }
-
                 </div>
             </div>
-
         </div>
     )
 }
